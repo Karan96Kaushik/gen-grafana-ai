@@ -1539,7 +1539,7 @@ def main():
         manager = GrafanaDashboardManager()
         db_summarizer = db_explorer.DatabaseSummarizer()
 
-        table_ddls = manager.get_table_ddl_only_for_dashboard(db_summarizer, ['t_vehicle_telematics','stg_masternaut', 't_error_log','t_vehicle'], "add a new panel that gets data from \"t_vehicle_telematics\" to show vehicles filtered with the multi input variable $vehicle_id")
+        table_ddls = manager.get_table_ddl_only_for_dashboard(db_summarizer, [''], "")
         
         print(json.dumps(table_ddls, indent=2, cls=DateTimeEncoder))
         return
