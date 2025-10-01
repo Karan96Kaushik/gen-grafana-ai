@@ -1,8 +1,8 @@
-# 🎯 Groq Cloud Spyder - AI-Powered Data & Dashboard Analysis
+# AI-Powered Data & Dashboard Analysis + Generations
 
 A comprehensive suite of AI-powered tools for database analysis and Grafana dashboard management using the Groq LLM API.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -16,7 +16,7 @@ A comprehensive suite of AI-powered tools for database analysis and Grafana dash
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
-## 🔍 Overview
+## Overview
 
 This project provides two main capabilities:
 
@@ -28,22 +28,22 @@ Both tools leverage the Groq LLM API for intelligent analysis and modification c
 ## ✨ Features
 
 ### Database Analysis
-- 📊 Automated table schema analysis
-- 🔍 Sample data summarization
-- 📈 Statistical insights and patterns
-- 💼 Business intelligence recommendations
-- 🔍 Custom SQL query analysis
-- 🏗️ Multiple analysis types (general, statistical, business, quality)
+- Automated table schema analysis
+- Sample data summarization
+- Statistical insights and patterns
+- Business intelligence recommendations
+- Custom SQL query analysis
+- Multiple analysis types (general, statistical, business, quality)
 
 ### Grafana Dashboard Management
-- 📋 List and browse existing dashboards
-- 🔍 AI-powered dashboard analysis and summarization
-- ✏️ Natural language dashboard modification
-- 💾 Automated dashboard creation and storage
-- 🎨 Dashboard optimization recommendations
-- 🔧 Troubleshooting assistance
+- List and browse existing dashboards
+- AI-powered dashboard analysis and summarization
+- Natural language dashboard modification
+- Automated dashboard creation and storage
+- Dashboard optimization recommendations
+- Troubleshooting assistance
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -77,7 +77,7 @@ Both tools leverage the Groq LLM API for intelligent analysis and modification c
    GROQ_API_KEY=your_groq_api_key_here
    ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Database Setup
 
@@ -108,7 +108,7 @@ Update the model in either script by modifying the `MODEL` variable:
 MODEL = "qwen/qwen3-32b"  # or any other supported Groq model
 ```
 
-## 📊 Database Analysis Pipeline
+## Database Analysis Pipeline
 
 ### Workflow Steps
 
@@ -172,7 +172,7 @@ Analyzing table: orders
 [AI-generated business analysis results...]
 ```
 
-## 🎯 Grafana Dashboard Management Pipeline
+## Grafana Dashboard Management Pipeline
 
 ### Workflow Steps
 
@@ -197,7 +197,7 @@ python grafana_dashboard_manager.py
 🎯 Grafana Dashboard Manager
 ============================================================
 
-📊 Found 3 dashboards:
+Found 3 dashboards:
 ------------------------------------------------------------
  1. System Performance Overview
     Slug: system-performance-overview
@@ -213,7 +213,7 @@ python grafana_dashboard_manager.py
 
 Select a dashboard (1-3): 1
 
-✅ Selected: System Performance Overview
+Selected: System Performance Overview
 
 🔍 Analyzing dashboard...
 ============================================================
@@ -224,7 +224,7 @@ This dashboard monitors system performance metrics including CPU usage, memory c
 [Detailed AI analysis continues...]
 
 ============================================================
-📝 Dashboard Modification
+Dashboard Modification
 ============================================================
 
 Describe the changes you want to make to this dashboard: Add a new panel showing database connection counts and slow query metrics
@@ -234,16 +234,16 @@ Enter a name for the new dashboard: System Performance with Database Metrics
 🤖 Modifying dashboard using AI...
 This may take a moment...
 
-💾 Saving new dashboard: 'System Performance with Database Metrics'
+Saving new dashboard: 'System Performance with Database Metrics'
 
-✅ Successfully created new dashboard with ID: 4
+Successfully created new dashboard with ID: 4
    Title: System Performance with Database Metrics
    Slug: system-performance-with-database-metrics
 
-🎉 Dashboard workflow completed!
+Dashboard workflow completed!
 ```
 
-## 🔧 Robust JSON Processing
+## Robust JSON Processing
 
 The Grafana Dashboard Manager includes sophisticated JSON extraction and validation capabilities to handle various LLM response formats:
 
