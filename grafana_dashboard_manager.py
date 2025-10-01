@@ -53,7 +53,7 @@ load_dotenv()
 
 # As per literature research, this would work well for code/json generation
 DASHBOARD_MODEL = "qwen/qwen3-32b"
-# DASHBOARD_MODEL = "openai/gpt-oss-20b"
+DASHBOARD_MODEL = "openai/gpt-oss-20b"
 
 # As per testing, this works well for table data analysis
 TABLEDATA_MODEL = "llama-3.3-70b-versatile"
@@ -320,7 +320,7 @@ class GrafanaDashboardManager:
             return None
     
     def insert_dashboard(self, title: str, slug: str, data: Dict[str, Any], uid: str) -> Optional[int]:
-        """Insert a new dashboard into the database"""
+        """Insert a new dashboard into the database or update existing one if slug exists"""
         conn = self.connect_db()
         if not conn:
             return None
@@ -329,21 +329,47 @@ class GrafanaDashboardManager:
             cursor = conn.cursor()
             now = datetime.now()
             
+            # Check if slug already exists
             cursor.execute(f"""
-                INSERT INTO {self.schema}.{self.dashboard_table} (title, slug, created, updated, data, version, org_id, uid)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id
-            """, (title, slug, now, now, json.dumps(data), 1, 1, uid))
+                SELECT id, version FROM {self.schema}.{self.dashboard_table}
+                WHERE slug = %s
+            """, (slug,))
             
-            dashboard_id = cursor.fetchone()[0]
-            conn.commit()
-            cursor.close()
-            conn.close()
+            existing_dashboard = cursor.fetchone()
             
-            return dashboard_id
+            if existing_dashboard:
+                # Update existing dashboard
+                dashboard_id, current_version = existing_dashboard
+                new_version = current_version + 1
+                
+                cursor.execute(f"""
+                    UPDATE {self.schema}.{self.dashboard_table}
+                    SET title = %s, updated = %s, data = %s, version = %s, uid = %s
+                    WHERE id = %s
+                """, (title, now, json.dumps(data), new_version, uid, dashboard_id))
+                
+                conn.commit()
+                cursor.close()
+                conn.close()
+                
+                return dashboard_id
+            else:
+                # Insert new dashboard
+                cursor.execute(f"""
+                    INSERT INTO {self.schema}.{self.dashboard_table} (title, slug, created, updated, data, version, org_id, uid)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
+                """, (title, slug, now, now, json.dumps(data), 1, 1, uid))
+                
+                dashboard_id = cursor.fetchone()[0]
+                conn.commit()
+                cursor.close()
+                conn.close()
+                
+                return dashboard_id
             
         except Exception as e:
-            print(f"Error inserting dashboard: {e}")
+            print(f"Error inserting/updating dashboard: {e}")
             return None
     
     def parse_dashboard_with_lib(self, dashboard_data: Dict[str, Any]) -> Tuple[Optional[GrafanaDashboard], List[str]]:

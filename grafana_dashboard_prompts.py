@@ -158,4 +158,13 @@ Notes:
 - `datasource_uid` can be parameterized as a variable (e.g., ${FPSDB}) if templating is used.
 - This summary is meant as context; full JSON config is only needed when performing ADD/MODIFY operations.
 
+Grafana Variable Best Practices (SQL Datasources):
+
+1. Use =$var for single-value, IN($var) for multi-value.
+3. With Include All, use :sql so ALL expands into (val1, val2, …).
+4. Always apply $__timeFilter(time_column) for time-based queries.
+5. Avoid SELECT *; only select needed columns. Use LIMIT only for testing.
+6. Keep variable names meaningful and datasource references parameterized.
+7. When inserting Grafana variables in SQL, do not wrap them in {} — use $variable or directly inside the query
+
 """
