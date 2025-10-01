@@ -33,6 +33,9 @@ Current Dashboard: {dashboard_obj.title}
 Current Panels Summary:
 {json.dumps(panels_summary, indent=2)}
 
+Template for the panel:
+{panel_template_prompt}
+
 Available Database Tables:
 {table_information_str}
 
@@ -117,3 +120,42 @@ Based on this information, provide a list of database table names that might be 
 Return only a simple comma-separated list of table names (no explanations):"""
 
         return prompt
+
+
+
+
+panel_template_prompt = """
+
+Current Panels Summary (generalized structure):
+
+[
+  {
+    "id": <int>,                       # unique panel ID
+    "title": <string>,                 # panel title
+    "type": <string>,                  # panel type (timeseries, barchart, table, stat, etc.)
+    "gridPos": {                       # position and size on the dashboard
+      "h": <int>, "w": <int>, "x": <int>, "y": <int>
+    },
+    "datasource_uid": <string>,        # datasource reference
+    "targets": [                       # list of queries powering this panel
+      {
+        "refId": <string>,             # reference ID (A, B, C…)
+        "format": <string>,            # output format (time_series, table, etc.)
+        "rawSql": <string>             # SQL query or expression used
+      }
+    ],
+    "fieldConfig": {                   # visualization-level formatting
+      "defaults": {...}, 
+      "overrides": [...]
+    },
+    "options": {...}                   # visualization options (legend, tooltip, etc.)
+  }
+]
+
+Notes:
+- Only include the most relevant properties for modification (id, title, type, gridPos, datasource, targets, fieldConfig, options).
+- `targets.rawSql` should reflect the main query used by the panel.
+- `datasource_uid` can be parameterized as a variable (e.g., ${FPSDB}) if templating is used.
+- This summary is meant as context; full JSON config is only needed when performing ADD/MODIFY operations.
+
+"""

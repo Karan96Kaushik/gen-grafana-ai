@@ -53,6 +53,7 @@ load_dotenv()
 
 # As per literature research, this would work well for code/json generation
 DASHBOARD_MODEL = "qwen/qwen3-32b"
+DASHBOARD_MODEL = "openai/gpt-oss-20b"
 
 # As per testing, this works well for table data analysis
 TABLEDATA_MODEL = "llama-3.3-70b-versatile"
@@ -1022,9 +1023,9 @@ class GrafanaDashboardManager:
         
         # Strategy 1: Try direct parsing (cleanest case)
         try:
-            print(f"Trying to parse JSON: {original_text}")
+            # print(f"Trying to parse JSON: {original_text}")
             parsed = json.loads(original_text)
-            print(f"Successfully parsed JSON: {parsed}")
+            # print(f"Successfully parsed JSON: {parsed}")
             return parsed, ""
         except json.JSONDecodeError:
             print(f"Failed to parse JSON: {original_text}")

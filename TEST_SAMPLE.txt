@@ -1,0 +1,6 @@
+
+Prompt:
+add a new table type panel that gets data from "t_vehicle_telematics" to show vehicles filtered with the multiple vehicle_id values , remove the panel that gets data from "t_vehicle" and also add a horizontal stacked barchart panel for the count of active and inactive vehicles grouped by fleet_id from the t_vehicle table.
+
+Title:
+V2 Telematics Health Analysis
