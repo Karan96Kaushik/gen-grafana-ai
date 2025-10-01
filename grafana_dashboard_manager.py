@@ -21,6 +21,15 @@ from grafana_dashboard_prompts import get_dashboard_analysis_prompt
 from grafana_dashboard_prompts import get_dashboard_modification_suggestions_prompt
 from grafana_dashboard_prompts import get_table_list_prompt
 
+
+# As per literature research, this would work well for code/json generation
+DASHBOARD_MODEL = "qwen/qwen3-32b"
+DASHBOARD_MODEL = "openai/gpt-oss-20b"
+
+# As per testing, this works well for table data analysis
+TABLEDATA_MODEL = "llama-3.3-70b-versatile"
+
+
 class DateTimeEncoder(json.JSONEncoder):
     """Custom JSON encoder that handles datetime objects"""
     def default(self, obj):
@@ -50,13 +59,6 @@ import db_explorer
 
 # Load environment variables
 load_dotenv()
-
-# As per literature research, this would work well for code/json generation
-DASHBOARD_MODEL = "qwen/qwen3-32b"
-DASHBOARD_MODEL = "openai/gpt-oss-20b"
-
-# As per testing, this works well for table data analysis
-TABLEDATA_MODEL = "llama-3.3-70b-versatile"
 
 class GrafanaDashboardManager:
     """Manages Grafana dashboards with AI-powered analysis and modification capabilities."""
@@ -1561,6 +1563,17 @@ class GrafanaDashboardManager:
 
 def main():
     """Main function to run the Grafana Dashboard Manager"""
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--test-parse-dashboard":
+        manager = GrafanaDashboardManager()
+        selected_dashboard_id = sys.argv[2]
+        selected_dashboard = manager.get_dashboard_by_id(selected_dashboard_id)
+        # print(json.dumps(json.loads(selected_dashboard['data']), indent=2, cls=DateTimeEncoder))
+        dashboard_obj, parse_messages = manager.parse_dashboard_with_lib(selected_dashboard)
+        print()
+        print(dashboard_obj.get_variables_formatted('summary'))
+
+        return
 
     if len(sys.argv) > 1 and sys.argv[1] == "--test-table-information":
         manager = GrafanaDashboardManager()

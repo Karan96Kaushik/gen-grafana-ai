@@ -364,6 +364,34 @@ class TemplateVariable:
             skip_url_sync=data.get("skipUrlSync", False),
             sort=data.get("sort", 0)
         )
+    
+    def __str__(self) -> str:
+        """Return a formatted string representation of the variable"""
+        parts = [f"Variable: ${{{self.name}}}"]
+        parts.append(f"  Type: {self.type}")
+        
+        if self.query:
+            parts.append(f"  Query: {self.query}")
+        
+        if self.datasource:
+            parts.append(f"  Datasource: {self.datasource.type} ({self.datasource.uid})")
+        
+        if self.current:
+            current_value = self.current.get('value', 'N/A')
+            parts.append(f"  Current Value: {current_value}")
+        
+        flags = []
+        if self.multi:
+            flags.append("multi-select")
+        if self.include_all:
+            flags.append("include-all")
+        if self.hide:
+            flags.append("hidden")
+        
+        if flags:
+            parts.append(f"  Flags: {', '.join(flags)}")
+        
+        return "\n".join(parts)
 
 
 @dataclass
@@ -491,11 +519,17 @@ class GrafanaDashboard:
         
         # Parse time range
         time_range = TimeRange.from_dict(data.get("time", {}))
+
+        # print('data', json.dumps(data, indent=2))
         
         # Parse template variables
         templating_data = data.get("templating", {})
+        # print('templating_data', templating_data)
         variables = []
         for var_data in templating_data.get("list", []):
+
+            # print('var_data', var_data)
+
             variables.append(TemplateVariable.from_dict(var_data))
         
         # Parse annotations
@@ -591,6 +625,57 @@ class GrafanaDashboard:
             if var.name == variable_name:
                 return var
         return None
+
+    def get_variables_formatted(self, format_type: str = "detailed") -> str:
+        """
+        Get template variables as a formatted string.
+        
+        Args:
+            format_type: Format type - "detailed", "summary", or "list"
+        
+        Returns:
+            Formatted string representation of template variables
+        """
+        if not self.templating:
+            return "No template variables defined"
+        
+        if not self.templating:
+            return "No template variables defined"
+        
+        if format_type == "list":
+            # Simple list format
+            var_list = [f"${{{var.name}}}" for var in self.templating]
+            return f"Template Variables ({len(var_list)}): {', '.join(var_list)}"
+        
+        elif format_type == "summary":
+            # Summary format with basic info
+            lines = [f"Template Variables ({len(self.templating)}):"]
+            # lines.append("-" * 60)
+            for var in self.templating:
+                # print('var', var)
+                flags = []
+                if var.multi:
+                    flags.append("multi")
+                if var.include_all:
+                    flags.append("all")
+                if var.hide:
+                    flags.append("hidden")
+                flag_str = f" [{', '.join(flags)}]" if flags else ""
+                
+                current_val = '' # var.current.get('value', 'N/A') if var.current else 'N/A'
+                lines.append(f"  {var.name} ({var.type}): {current_val}{flag_str}")
+            
+            return "\n".join(lines)
+        
+        else:  # detailed format
+            # Detailed format with all information
+            lines = [f"Template Variables ({len(self.templating)}):"]
+            lines.append("=" * 60)
+            
+            for i, var in enumerate(self.templating, 1):
+                lines.append(f"\n{i}. {str(var)}")
+            
+            return "\n".join(lines)
 
     def validate(self) -> Tuple[bool, List[str]]:
         """Validate dashboard structure and return validation results"""
@@ -777,8 +862,10 @@ class GrafanaDashboardParser:
         
         # Try direct parsing first
         try:
+            # print(json.dumps(json.loads(original_json), indent=2))
             return json.loads(original_json), warnings
         except json.JSONDecodeError:
+            print('Failed to parse JSON: Invalid JSON format')
             pass
         
         # Remove common formatting issues

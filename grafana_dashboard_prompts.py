@@ -34,10 +34,13 @@ Current Panels Summary:
 {json.dumps(panels_summary, indent=2)}
 
 Template for the panel:
-{panel_template_prompt}
+{panel_template_rules_prompt}
 
 Available Database Tables:
 {table_information_str}
+
+Dashboard Variables:
+{dashboard_obj.get_variables_formatted('summary')}
 
 User's Request: {modification_request}
 
@@ -124,7 +127,7 @@ Return only a simple comma-separated list of table names (no explanations):"""
 
 
 
-panel_template_prompt = """
+panel_template_rules_prompt = """
 
 Current Panels Summary (generalized structure):
 
@@ -166,5 +169,7 @@ Grafana Variable Best Practices (SQL Datasources):
 5. Avoid SELECT *; only select needed columns. Use LIMIT only for testing.
 6. Keep variable names meaningful and datasource references parameterized.
 7. When inserting Grafana variables in SQL, do not wrap them in {} — use $variable or directly inside the query
+8. Don't use :sql or :csv in the query, use $var instead
+
 
 """
