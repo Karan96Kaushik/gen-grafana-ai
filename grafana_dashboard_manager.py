@@ -53,7 +53,7 @@ load_dotenv()
 
 # As per literature research, this would work well for code/json generation
 DASHBOARD_MODEL = "qwen/qwen3-32b"
-DASHBOARD_MODEL = "openai/gpt-oss-20b"
+# DASHBOARD_MODEL = "openai/gpt-oss-20b"
 
 # As per testing, this works well for table data analysis
 TABLEDATA_MODEL = "llama-3.3-70b-versatile"
